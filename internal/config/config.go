@@ -35,7 +35,7 @@ func Read() (Config, error) {
 	decoder := json.NewDecoder(file)
 	var cfg Config
 	err = decoder.Decode(&cfg)
-	return cfg, nil
+	return cfg, err
 }
 
 func getConfigFilePath() (string, error) {
