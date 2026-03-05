@@ -1,0 +1,17 @@
+# Binaries
+gator
+*.exe
+*.out
+
+# Config with sensitive data
+gatorconfig.json
+
+# Go build cache
+*.test
+*.prof
+
+# Environment files
+.env
+
+# macOS
+.DS_Store
