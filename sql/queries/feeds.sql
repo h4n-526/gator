@@ -1,4 +1,9 @@
 -- name: CreateFeed :one
 insert into feeds (id, created_at, updated_at, name, url, user_id)
-values ($1, $2, $3, $4, $5, $6)
-returning *;
+values ($1, $2, $3, $4, $5, $6) returning *;
+
+-- name: GetFeeds :many
+select feeds.name, feeds.url, users.name as user_name
+from feeds
+       join users
+            on users.id = feeds.user_id;
