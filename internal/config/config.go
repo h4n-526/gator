@@ -17,11 +17,6 @@ func (cfg *Config) SetUser(username string) error {
 	return write(*cfg)
 }
 
-func (cfg *Config) SetDBURL(dbURL string) error {
-	cfg.DBURL = dbURL
-	return write(*cfg)
-}
-
 func Read() (Config, error) {
 	path, err := getConfigFilePath()
 	if err != nil {

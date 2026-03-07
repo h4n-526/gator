@@ -49,10 +49,8 @@ func handlerRegister(s *state, cmd command) error {
 }
 
 func handlerReset(s *state, _ command) error {
-	err := s.db.DeleteAllUsers(context.Background())
-	if err != nil {
-		fmt.Println("error deleting all users: ", err)
-		return err
+	if err := s.db.DeleteAllUsers(context.Background()); err != nil {
+		return fmt.Errorf("could not delete all users: %w", err)
 	}
 	fmt.Println("All users deleted")
 	return nil
@@ -63,9 +61,10 @@ func handlerUsers(s *state, _ command) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("* %s (current)\n", s.cfg.CurrentUserName)
 	for _, user := range users {
-		if user.Name != s.cfg.CurrentUserName {
+		if user.Name == s.cfg.CurrentUserName {
+			fmt.Printf("* %s (current)\n", user.Name)
+		} else {
 			fmt.Printf("* %s\n", user.Name)
 		}
 	}
