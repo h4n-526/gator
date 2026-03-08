@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"gator/internal/database"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -99,6 +100,36 @@ func handlerUnfollow(s *state, cmd command, user database.User) error {
 	}
 
 	fmt.Printf("Unfollowed %s\n", feed.Name)
+	return nil
+}
+
+func handlerBrowse(s *state, cmd command, user database.User) error {
+	limit := int32(2)
+	if len(cmd.args) > 0 {
+		if n, err := strconv.Atoi(cmd.args[0]); err == nil {
+			limit = int32(n)
+		}
+	}
+
+	posts, err := s.db.GetPostsForUser(context.Background(), database.GetPostsForUserParams{
+		UserID: user.ID,
+		Limit:  limit,
+	})
+	if err != nil {
+		return fmt.Errorf("could not get posts: %w", err)
+	}
+
+	for _, post := range posts {
+		fmt.Printf("Title: %s\n", post.Title)
+		fmt.Printf("  URL: %s\n", post.Url)
+		if post.Description.Valid {
+			fmt.Printf("  Description: %s\n", post.Description.String)
+		}
+		if post.PublishedAt.Valid {
+			fmt.Printf("  Published: %v\n", post.PublishedAt.Time.Format(time.RFC1123))
+		}
+		fmt.Println()
+	}
 	return nil
 }
 
